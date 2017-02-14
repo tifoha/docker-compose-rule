@@ -26,3 +26,13 @@ stages:
             0) PATH=/usr/lib/jvm/jdk1.8.0/jre/bin/:$PATH ./gradlew test --info ;;
             1) PATH=/usr/lib/jvm/jdk1.8.0/jre/bin/:$PATH ./gradlew {findbugs,checkstyle}{Main,Test} javadoc --info ;;
             esac
+
+  deployment:
+    workDir: ~/docker-compose-rule
+    steps:
+      - type: deploy
+        name: "Deploy to Bintray"
+        command: |
+          if [ -z "${CIRCLE_TAG}" ]; then
+            PATH=/usr/lib/jvm/jdk1.8.0/jre/bin/:$PATH ./gradlew -i bintrayUpload
+          fi
